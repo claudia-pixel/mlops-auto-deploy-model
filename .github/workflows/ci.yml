@@ -68,4 +68,6 @@ jobs:
               -p 80:5000 \
               -e S3_BUCKET_NAME=modelo-onnx \
               -e S3_MODEL_KEY=densenet121_Opset17.onnx \
+              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}

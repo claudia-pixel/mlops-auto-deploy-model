@@ -1,5 +1,5 @@
 flask
 onnxruntime
 numpy
-pytest
-boto3 
+pillow
+boto3

@@ -6,6 +6,7 @@ on:
       - main
 
 permissions:
+  pull-requests: write
   contents: read
   packages: write
 
@@ -45,21 +46,26 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ env.BRANCH_TAG }}
+          no-cache: true
+          tags: ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.created=${{ github.run_started_at }}
 
-      - name: Desplegar imagen en EC2
+      - name: Desplegar en EC2 vía SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          port: 22
           script: |
-            echo "====== INICIANDO DESPLIEGUE EN EC2 ======"
-            docker rm -f mlopsapp || true
-            docker pull ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ env.BRANCH_TAG }}
-            docker run -d --name mlopsapp
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            docker stop mlopsapp || true
+            docker rm mlopsapp || true
+            docker pull ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
+            docker run -d --name mlopsapp \
+              -p 80:5000 \
+              -e S3_BUCKET_NAME=modelo-onnx \
+              -e S3_MODEL_KEY=densenet121_Opset17.onnx \
+              ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}

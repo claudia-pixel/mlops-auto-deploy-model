@@ -64,7 +64,7 @@ jobs:
             docker stop mlopsapp || true
             docker rm mlopsapp || true
             docker pull ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
-            docker run -d --name mlopsapp \
+            docker run -d --restart unless-stopped --name mlopsapp \
               -p 80:5000 \
               -e S3_BUCKET_NAME=modelo-onnx \
               -e S3_MODEL_KEY=densenet121_Opset17.onnx \

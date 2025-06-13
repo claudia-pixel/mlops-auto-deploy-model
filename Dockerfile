@@ -9,6 +9,5 @@ COPY app.py .
 COPY src/ src/                        
 COPY utils/ utils/
 COPY templates/ templates/ 
-COPY tests/ tests/  
 
 CMD ["python", "app.py"]

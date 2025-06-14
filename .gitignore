@@ -1,3 +1,35 @@
+# Archivos y carpetas de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Carpetas de testing y caché
+.pytest_cache/
+.vscode/
+
+# Archivos de entorno y configuración local
 .env
+
+# Resultados de predicciones
+results/
+*.json
+
+# Modelos descargados localmente
 onnx_models/*
 onnx_models
+
+# Imágenes o datos de prueba
+tests/Datos-prueba/
+*.jpg
+*.png
+
+# Archivos temporales o de backup
+*.log
+*.bak
+*.tmp
+*~
+
+# Archivos de sistema (por si se usan otras plataformas)
+.DS_Store
+Thumbs.db

@@ -31,7 +31,7 @@ graph TD;
 
 ## ⚙️ Estructura del Workflow
 
-Archivo ubicado en: `.github/workflows/deploy.yml`
+Archivo ubicado en: `.github/workflows/ci.yml`
 
 ### 🧪 `Job: pruebas_unitarias`
 Se ejecuta al hacer `push` en la rama `dev`.
@@ -121,7 +121,7 @@ gh pr create --base main --head dev --title "Deploy a producción"
 
 Este workflow está diseñado para proyectos de Machine Learning en producción que:
 - Usan modelos ONNX almacenados en S3.
-- Sirven inferencias vía Flask o FastAPI.
+- Sirven inferencias vía Flask.
 - Se despliegan con Docker en la nube (EC2).
 
 ---
@@ -134,4 +134,4 @@ Este proyecto está bajo la licencia MIT.
 
 ## 👩‍💻 Autor
 
-Claudia - MLOps Enthusiast 🚀
+Claudia Martinez- Enrique Manzano MLOps Enthusiast 🚀

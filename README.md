@@ -106,6 +106,43 @@ git push origin dev
 gh pr create --base main --head dev --title "Deploy a producción"
 # Despliega automáticamente en EC2
 ```
+## Estructura del proyecto MLOPS
+
+mlops-auto-deploy-model/
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml                # ⚙️ Workflow de GitHub Actions para CI/CD
+├── app.py                           # 🧠 API Flask que carga el modelo y realiza inferencia
+├── docker/
+│   └── Dockerfile                   # 🐳 Imagen Docker para contenerizar la app
+├── onnx_models/                     # 📦 Carpeta de modelos descargados dinámicamente desde S3
+│   └── (vacía por defecto)
+├── tests/
+│   └── test_model.py                # 🧪 Pruebas unitarias con Pytest
+├── utils/
+│   ├── classifier.py                # 🔍 Clasificador que usa ONNX para predecir
+│   ├── image_utils.py               # 🖼️ Funciones de preprocesamiento de imagen
+│   └── s3_utils.py                  # ☁️ Funciones de descarga desde AWS S3
+├── requirements.txt                 # 📜 Dependencias de Python
+├── README.md                        # 📖 Documentación del proyecto (por crear o actualizar)
+└── .gitignore                       # 🚫 Archivos ignorados por Git
+
+ 
+## 📝 Descripción de Carpetas y Archivos
+
+| Carpeta/Archivo        | Descripción                                               |
+| ---------------------- | --------------------------------------------------------- |
+| `.github/workflows/`   | Contiene el archivo YAML que define el pipeline CI/CD.    |
+| `app.py`               | App Flask principal. Carga modelo ONNX y expone la API.   |
+| `docker/Dockerfile`    | Define cómo construir la imagen Docker de la app.         |
+| `onnx_models/`         | Carpeta donde se descargan los modelos desde S3.          |
+| `tests/test_model.py`  | Pruebas unitarias usando `pytest` que validan inferencia. |
+| `utils/classifier.py`  | Función que carga y ejecuta el modelo ONNX.               |
+| `utils/image_utils.py` | Preprocesa la imagen para adaptarla al modelo.            |
+| `utils/s3_utils.py`    | Funciones para descargar modelo e imágenes desde S3.      |
+| `requirements.txt`     | Lista de dependencias requeridas por la aplicación.       |
+| `.gitignore`           | Archivos/carpetas que no deben incluirse en el repo.      |
+
 
 ---
 

@@ -165,30 +165,24 @@ git push origin dev
 gh pr create --base main --head dev --title "Deploy a producción"
 # Despliega automáticamente en EC2
 ```
-
+---
 ## 🗂️ Estructura del Proyecto MLOPS
 
-```bash
-mlops-auto-deploy-model/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml                # ⚙️ Workflow de GitHub Actions para CI/CD
-├── app.py                           # 🧠 API Flask que carga el modelo y realiza inferencia
-├── docker/
-│   └── Dockerfile                   # 🐳 Imagen Docker para contenerizar la app
-├── onnx_models/                     # 📦 Carpeta de modelos descargados dinámicamente desde S3
-├── tests/
-│   └── test_model.py                # 🧪 Pruebas unitarias con Pytest
-├── utils/
-│   ├── classifier.py                # 🔍 Clasificador que usa ONNX para predecir
-│   ├── image_utils.py               # 🖼️ Funciones de preprocesamiento de imagen
-│   └── s3_utils.py                  # ☁️ Funciones de descarga desde AWS S3
-├── requirements.txt                 # 📜 Dependencias de Python
-├── README.md                        # 📖 Documentación del proyecto
-└── .gitignore                       # 🚫 Archivos ignorados por Git
-```
+mlops-appReadme/
+├── .dockerignore         # Archivos y carpetas ignorados por Docker
+├── .env                  # Variables de entorno (no debe subirse a control de versiones)
+├── .gitignore            # Archivos y carpetas ignorados por Git
+├── app.py                # Archivo principal de la aplicación Flask
+├── docker-compose.yml    # Orquestación de contenedores Docker
+├── Dockerfile            # Instrucciones para construir la imagen de la aplicación
+├── README.md             # Documentación del proyecto
+├── requirements.txt      # Dependencias de Python necesarias para ejecutar la app
+└── .git/                 # Carpeta interna de Git (se omite en detalle)
 
- 
+```
+---
+
+ ---
 ## 📝 Descripción de Carpetas y Archivos
 
 | Carpeta/Archivo        | Descripción                                               |

@@ -1,12 +1,12 @@
 name: CI/CD
 
 on:
+  push:
+    branches:
+      - dev
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - dev  # Ejecuta tests unitarios al hacer push a 'dev'
 
 permissions:
   pull-requests: write
@@ -32,10 +32,12 @@ jobs:
       - name: Añadir la raíz del proyecto al PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
-      - name: Definir variables de entorno necesarias
+      - name: Definir variables de entorno necesarias para pruebas
         run: |
           echo "S3_BUCKET_NAME=modelo-onnx" >> $GITHUB_ENV
           echo "S3_MODEL_KEY=Datos-prueba/pug_600.jpg" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
 
       - name: Ejecutar pruebas unitarias con Pytest
         run: pytest

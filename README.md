@@ -5,7 +5,26 @@ Este proyecto contiene una aplicación basada en modelos de aprendizaje profundo
 
 El objetivo es garantizar un flujo de desarrollo robusto, con pruebas automáticas en cada cambio, y despliegues controlados al entorno de producción mediante contenedores Docker en una instancia EC2.
 
+# 📦 MLOps: Auto Deploy Model con Flask, ONNX, Docker y GitHub Actions
+
+Este repositorio contiene una aplicación de clasificación de imágenes utilizando un modelo **DenseNet121** en formato **ONNX**. Incluye un entorno MLOps completo con:
+
+- **Flask** para servir el modelo.
+- **Docker** para contenerización.
+- **AWS S3** para almacenamiento de modelos e imágenes.
+- **GitHub Actions** para CI/CD automático.
+
 ---
+
+## 🚀 Características
+
+- Descarga el modelo ONNX e imágenes de prueba desde un bucket S3.
+- Expone una API con Flask para clasificar imágenes.
+- Incluye pruebas unitarias con Pytest.
+- CI/CD con GitHub Actions: test, build, push y despliegue en EC2.
+
+---
+
 
 ## 📌 ¿Qué hace este workflow?
 
@@ -26,6 +45,46 @@ graph TD;
     E --> F[Publicar Imagen Docker]
     F --> G[Despliegue EC2 por SSH]
 ```
+---
+
+## 🚀 Características
+
+- Descarga el modelo ONNX e imágenes de prueba desde un bucket S3.
+- Expone una API con Flask para clasificar imágenes.
+- Incluye pruebas unitarias con Pytest.
+- CI/CD con GitHub Actions: test, build, push y despliegue en EC2.
+
+---
+
+## 📦 Requisitos
+
+- Docker
+- Python 3.9+
+- AWS CLI configurado si pruebas localmente
+
+---
+## 🐳 Construcción y ejecución con Docker
+
+```bash
+docker build -t mlopsapp .
+docker run -p 5000:5000 mlopsapp
+```
+---
+
+## ☁️ Despliegue automático
+
+- Al hacer **push a `dev`** → Se ejecutan **pruebas unitarias**.
+- Al hacer **pull request hacia `main`** → Se ejecuta **build Docker + despliegue EC2**.
+
+---
+
+## ✉️ Endpoint Flask
+
+`POST /predict`
+
+- Body: `multipart/form-data`
+- Campo: `image`
+- Respuesta: JSON con clase predicha y probabilidad
 
 ---
 
@@ -106,8 +165,10 @@ git push origin dev
 gh pr create --base main --head dev --title "Deploy a producción"
 # Despliega automáticamente en EC2
 ```
-## Estructura del proyecto MLOPS
 
+## 🗂️ Estructura del Proyecto MLOPS
+
+```bash
 mlops-auto-deploy-model/
 ├── .github/
 │   └── workflows/
@@ -116,7 +177,6 @@ mlops-auto-deploy-model/
 ├── docker/
 │   └── Dockerfile                   # 🐳 Imagen Docker para contenerizar la app
 ├── onnx_models/                     # 📦 Carpeta de modelos descargados dinámicamente desde S3
-│   └── (vacía por defecto)
 ├── tests/
 │   └── test_model.py                # 🧪 Pruebas unitarias con Pytest
 ├── utils/
@@ -124,8 +184,9 @@ mlops-auto-deploy-model/
 │   ├── image_utils.py               # 🖼️ Funciones de preprocesamiento de imagen
 │   └── s3_utils.py                  # ☁️ Funciones de descarga desde AWS S3
 ├── requirements.txt                 # 📜 Dependencias de Python
-├── README.md                        # 📖 Documentación del proyecto (por crear o actualizar)
+├── README.md                        # 📖 Documentación del proyecto
 └── .gitignore                       # 🚫 Archivos ignorados por Git
+```
 
  
 ## 📝 Descripción de Carpetas y Archivos

@@ -1,13 +1,12 @@
 name: CI/CD
 
 on:
-  push:
-    branches:
-      - dev  # Solo ejecuta pruebas en la rama dev
-
   pull_request:
     branches:
-      - main  # Despliegue en EC2 cuando hay PR a main
+      - main
+  push:
+    branches:
+      - dev  # Ejecuta tests unitarios al hacer push a 'dev'
 
 permissions:
   pull-requests: write
@@ -15,34 +14,8 @@ permissions:
   packages: write
 
 jobs:
-  test:
-    if: github.ref == 'refs/heads/dev'
-    runs-on: ubuntu-latest
-    name: Ejecutar pruebas unitarias
-
-    steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Instalar dependencias
-        run: pip install -r requirements.txt
-
-      - name: Añadir la raíz del proyecto al PYTHONPATH
-        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
-
-      - name: Ejecutar pruebas con pytest
-        run: pytest --maxfail=1 --disable-warnings -q
-
-
   publicacion:
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest
-    name: Build & Deploy
 
     steps:
       - name: Checkout del código
@@ -58,6 +31,14 @@ jobs:
 
       - name: Añadir la raíz del proyecto al PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Definir variables de entorno necesarias
+        run: |
+          echo "S3_BUCKET_NAME=modelo-onnx" >> $GITHUB_ENV
+          echo "S3_MODEL_KEY=Datos-prueba/pug_600.jpg" >> $GITHUB_ENV
+
+      - name: Ejecutar pruebas unitarias con Pytest
+        run: pytest
 
       - name: Definir nombre de usuario y branch
         run: |

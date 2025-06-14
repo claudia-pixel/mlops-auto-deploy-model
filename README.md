@@ -173,24 +173,20 @@ mlops-auto-deploy-model/
 │   └── workflows/
 │       └── ci-cd.yml                # ⚙️ Workflow de GitHub Actions para CI/CD
 ├── app.py                           # 🧠 API Flask que carga el modelo y realiza inferencia
-├── Dockerfile                       # 🐳 Imagen Docker para contenerizar la app
+├── docker/
+│   └── Dockerfile                   # 🐳 Imagen Docker para contenerizar la app
 ├── onnx_models/                     # 📦 Carpeta de modelos descargados dinámicamente desde S3
 │   └── (vacía por defecto)
-├── src/
-│   ├── data_utils.py                # 📊 Funciones relacionadas con el manejo de datos
-│   └── model_loader.py              # 📦 Carga del modelo ONNX
 ├── tests/
 │   └── test_model.py                # 🧪 Pruebas unitarias con Pytest
 ├── utils/
-│   ├── inference.py                 # 🔍 Lógica de inferencia con modelo ONNX
+│   ├── classifier.py                # 🔍 Clasificador que usa ONNX para predecir
+│   ├── image_utils.py               # 🖼️ Funciones de preprocesamiento de imagen
 │   └── s3_utils.py                  # ☁️ Funciones de descarga desde AWS S3
 ├── requirements.txt                 # 📜 Dependencias de Python
 ├── README.md                        # 📖 Documentación del proyecto (por crear o actualizar)
 └── .gitignore                       # 🚫 Archivos ignorados por Git
-
-```
----
-
+----
  ---
 ## 📝 Descripción de Carpetas y Archivos
 

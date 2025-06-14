@@ -36,7 +36,6 @@ jobs:
         run: |
           echo "S3_BUCKET_NAME=modelo-onnx" >> $GITHUB_ENV
           echo "S3_MODEL_KEY=densenet121_Opset17.onnx" >> $GITHUB_ENV
-          echo "S3_IMAGE_KEY=Datos-prueba/Pug_600.jpg" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
 

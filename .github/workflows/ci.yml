@@ -6,7 +6,7 @@ on:
       - dev
   pull_request:
     branches:
-      - main  
+      - main
 
 permissions:
   pull-requests: write
@@ -14,7 +14,37 @@ permissions:
   packages: write
 
 jobs:
+  tests:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Añadir la raíz del proyecto al PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Definir variables de entorno necesarias para pruebas
+        run: |
+          echo "S3_BUCKET_NAME=modelo-onnx" >> $GITHUB_ENV
+          echo "S3_MODEL_KEY=densenet121_Opset17.onnx" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Ejecutar pruebas unitarias con Pytest
+        run: pytest
+
   publicacion:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +75,7 @@ jobs:
       - name: Definir nombre de usuario y branch
         run: | 
           echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "BRANCH_TAG=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
+          echo "BRANCH_TAG=$(echo '${{ github.head_ref }}' | tr '/' '-')" >> $GITHUB_ENV
 
       - name: Iniciar sesión en GitHub Packages
         uses: docker/login-action@v3
@@ -60,7 +90,7 @@ jobs:
           context: .         
           push: true
           no-cache: true
-          tags: ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
+          tags: ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ env.BRANCH_TAG }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -76,11 +106,11 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker stop mlopsapp || true
             docker rm mlopsapp || true
-            docker pull ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
+            docker pull ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ env.BRANCH_TAG }}
             docker run -d --restart unless-stopped --name mlopsapp \
               -p 80:5000 \
               -e S3_BUCKET_NAME=modelo-onnx \
               -e S3_MODEL_KEY=densenet121_Opset17.onnx \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
+              ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ env.BRANCH_TAG }}

@@ -6,7 +6,7 @@ on:
       - dev
   pull_request:
     branches:
-      - main
+      - main  
 
 permissions:
   pull-requests: write
@@ -57,7 +57,7 @@ jobs:
       - name: Construir y publicar imagen Docker
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: .         
           push: true
           no-cache: true
           tags: ghcr.io/${{ env.USERNAME_LOWER }}/mlopsapp:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
